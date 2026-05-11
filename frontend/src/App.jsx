@@ -217,19 +217,18 @@ export default function App() {
         
         // Encabezado Institucional
         pdf.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        pdf.rect(0, 0, 210, 35, 'F');
+        pdf.rect(0, 0, 210, 25, 'F');
         
         pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(16);
+        pdf.setFontSize(14);
         pdf.setFont("helvetica", "bold");
-        pdf.text("REPORTE DE SIMULACIÓN - MICRO-RED H2 URIBIA", 105, 15, { align: "center" });
+        pdf.text("REPORTE DE SIMULACIÓN - MICRO-RED H2 URIBIA", 105, 12, { align: "center" });
         
-        pdf.setFontSize(10);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
-        pdf.text(`Fecha: ${new Date().toLocaleString()}`, 105, 23, { align: "center" });
-        pdf.text("Coordenadas: 11.7144° N, 72.2658° W (La Guajira, Colombia)", 105, 29, { align: "center" });
+        pdf.text(`Fecha: ${new Date().toLocaleString()} | Coordenadas: 11.7144° N, 72.2658° W (La Guajira)`, 105, 18, { align: "center" });
 
-        let currentY = 45;
+        let currentY = 32;
 
         // Tabla 1: Parámetros de Diseño
         autoTable(pdf, {
@@ -245,10 +244,11 @@ export default function App() {
             theme: 'grid',
             headStyles: { fillColor: primaryColor, textColor: 255, fontStyle: 'bold' },
             bodyStyles: { textColor: 50 },
-            alternateRowStyles: { fillColor: [241, 245, 249] }
+            alternateRowStyles: { fillColor: [241, 245, 249] },
+            margin: { top: 0, bottom: 0 }
         });
         
-        currentY = pdf.lastAutoTable.finalY + 10;
+        currentY = pdf.lastAutoTable.finalY + 5;
 
         // Tabla 2: Resultados Operativos
         autoTable(pdf, {
@@ -266,10 +266,11 @@ export default function App() {
             theme: 'grid',
             headStyles: { fillColor: primaryColor, textColor: 255, fontStyle: 'bold' },
             bodyStyles: { textColor: 50 },
-            alternateRowStyles: { fillColor: [241, 245, 249] }
+            alternateRowStyles: { fillColor: [241, 245, 249] },
+            margin: { top: 0, bottom: 0 }
         });
 
-        currentY = pdf.lastAutoTable.finalY + 10;
+        currentY = pdf.lastAutoTable.finalY + 5;
 
         // Tabla 3: Viabilidad Económica
         autoTable(pdf, {
@@ -283,17 +284,18 @@ export default function App() {
             theme: 'grid',
             headStyles: { fillColor: primaryColor, textColor: 255, fontStyle: 'bold' },
             bodyStyles: { textColor: 50 },
-            alternateRowStyles: { fillColor: [241, 245, 249] }
+            alternateRowStyles: { fillColor: [241, 245, 249] },
+            margin: { top: 0, bottom: 0 }
         });
 
-        currentY = pdf.lastAutoTable.finalY + 15;
+        currentY = pdf.lastAutoTable.finalY + 8;
 
         // Título de la gráfica
         pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        pdf.setFontSize(12);
+        pdf.setFontSize(11);
         pdf.setFont("helvetica", "bold");
         pdf.text("Análisis Predictivo 24H (Red LSTM)", 14, currentY);
-        currentY += 5;
+        currentY += 4;
 
         // Capturar gráfica con html2canvas
         const graphElement = document.getElementById('grafica-24h');
@@ -310,14 +312,13 @@ export default function App() {
             const pdfWidth = 210 - (margin * 2);
             const imgProps = pdf.getImageProperties(imgData);
             const imgRatio = imgProps.width / imgProps.height;
-            const finalHeight = pdfWidth / imgRatio;
+            
+            // Reducimos el tamaño al 85% para asegurar que entre en la primera página
+            const chartWidth = pdfWidth * 0.85;
+            const finalHeight = chartWidth / imgRatio;
+            const chartX = margin + (pdfWidth - chartWidth) / 2;
 
-            if (currentY + finalHeight > 297 - 20) {
-                pdf.addPage();
-                currentY = 20;
-            }
-
-            pdf.addImage(imgData, 'PNG', margin, currentY, pdfWidth, finalHeight);
+            pdf.addImage(imgData, 'PNG', chartX, currentY, chartWidth, finalHeight);
         }
 
         pdf.save(`Reporte_Tecnico_H2_${capacityMW}MW_${clima}.pdf`);
