@@ -40,7 +40,7 @@ export default function App() {
       setErrorStatus("");
       
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+        const API_URL = import.meta.env.VITE_API_URL || 'https://h2-uribia-api.onrender.com';
         const [resSimulacion, resPrediccion] = await Promise.all([
             fetch(`${API_URL}/simulacion?capacidad_solar_mw=${capacityMW}&capacidad_eolica_mw=${capacidadEolicaMW}&irradiancia_solar=${irradianciaSolar}&velocidad_viento=${velocidadViento}`),
             fetch(`${API_URL}/prediccion?capacidad_solar_mw=${capacityMW}&capacidad_eolica_mw=${capacidadEolicaMW}&irradiancia_solar=${irradianciaSolar}&velocidad_viento=${velocidadViento}`)
@@ -55,11 +55,10 @@ export default function App() {
         }
         
         if (isMounted) {
-          const resultados = result.resultados_diarios || {};
           setData({
-            produccion_h2: resultados.produccion_h2_kg ?? 0,
-            agua: resultados.agua_necesaria_litros ?? 0,
-            co2: resultados.co2_evitado_kg ?? 0,
+            produccion_h2: result.resultados_diarios?.produccion_h2_kg ?? 0,
+            agua: result.resultados_diarios?.agua_necesaria_litros ?? 0,
+            co2: result.resultados_diarios?.co2_evitado_kg ?? 0,
             lcoh_verde: result.economia?.lcoh_verde_usd ?? 4.50,
             lcoh_gris: result.economia?.lcoh_gris_usd ?? 2.10,
             compensacion: result.economia?.compensacion_impuesto_carbono_porcentaje ?? 36.1
