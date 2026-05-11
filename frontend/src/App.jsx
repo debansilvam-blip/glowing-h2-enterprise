@@ -259,7 +259,9 @@ export default function App() {
                 ['Consumo Hídrico Estimado', `${displayData?.agua?.toFixed(2)} L/día`],
                 ['Mitigación de Carbono (CO2)', `${displayData?.co2?.toFixed(2)} kg/día`],
                 ['Diésel Equivalente Reemplazado', `${dieselReemplazado} kg/día`],
-                ['Gas Natural Equivalente Reemplazado', `${gasReemplazado} m³/día`]
+                ['Gas Natural Equivalente Reemplazado', `${gasReemplazado} m³/día`],
+                ['Gasolina Equivalente Reemplazada', `${gasolinaReemplazada} L/día`],
+                ['Carbón Térmico Equivalente Reemplazado', `${carbonReemplazado} kg/día`]
             ],
             theme: 'grid',
             headStyles: { fillColor: primaryColor, textColor: 255, fontStyle: 'bold' },
